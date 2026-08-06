@@ -36,6 +36,11 @@ func ScanDirectory(targetPath string, ruleset *SecretRuleset) {
 		if err != nil || info.IsDir() {
 			return nil
 		}
+func ParseRules(data []byte) (*SecretRuleset, error) {
+	var ruleset SecretRuleset
+	err := yaml.Unmarshal(data, &ruleset)
+	return &ruleset, err
+}
 
 		file, err := os.Open(path)
 		if err != nil {
