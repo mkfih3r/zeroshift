@@ -38,6 +38,12 @@ func HuntLogFile(logPath string, ruleset *ThreatRuleset) {
 	}
 	defer file.Close()
 
+func ParseThreatRules(data []byte) (*SecretRuleset, error) { // Note: use your ThreatRuleset struct name
+	var ruleset ThreatRuleset
+	err := yaml.Unmarshal(data, &ruleset)
+	return &ruleset, err
+}
+
 	scanner := bufio.NewScanner(file)
 	lineNumber := 0
 
