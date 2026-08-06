@@ -1,0 +1,36 @@
+name: Release ZeroShift
+
+on:
+  push:
+    # Trigger the workflow only on tags matching v*, e.g., v1.0.0
+    tags:
+      - 'v*'
+
+permissions:
+  # Required to allow the action to create a GitHub Release
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Required for GoReleaser to generate the changelog properly
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21' # Adjust this to match your go.mod version
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          # GitHub automatically provides this token during the run
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
